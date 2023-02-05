@@ -105,46 +105,43 @@ func readJSONFile() Values {
 }
 
 func generateRating() {
-	var f = readJSONFile()
+	f := readJSONFile()
 
 	for _, v := range f.Models {
 		var vehResult feedbackResult
 		var vehRating rating
 
 		for _, msg := range v.Feedback {
-			var text []string
-			if len(text) >= 5 {
-				text = strings.Split(msg, " ")
-			}
 
-			vehRating = 5.0
-			vehResult.feedbackTotal++
+			if text := strings.Split(msg, " "); len(text) >= 5 {
+				vehRating = 5.0
+				vehResult.feedbackTotal++
 
-			for _, word := range text {
-				s := strings.Trim(strings.ToLower(word), " ,.,!,?,\t,\n,\r")
+				for _, word := range text {
+					s := strings.Trim(strings.ToLower(word), " ,.,!,?,\t,\n,\r")
 
-				switch s {
-				case "pleasure", "impressed", "wonderful", "fantastic", "splendid":
-					vehRating += extraPositive
-				case "help", "helpful", "thanks", "thank you", "happy":
-					vehRating += positive
-				case "not helpful", "sad", "angry", "improve", "annoy":
-					vehRating += negative
-				case "pathetic", "bad", "worse", "unfortunately", "agitated", "frustrated":
-					vehRating += extraNegative
+					switch s {
+					case "pleasure", "impressed", "wonderful", "fantastic", "splendid":
+						vehRating += extraPositive
+					case "help", "helpful", "thanks", "thank you", "happy":
+						vehRating += positive
+					case "not helpful", "sad", "angry", "improve", "annoy":
+						vehRating += negative
+					case "pathetic", "bad", "worse", "unfortunately", "agitated", "frustrated":
+						vehRating += extraNegative
+					}
+				}
+
+				switch {
+				case vehRating > 8.0:
+					vehResult.feedbackPositive++
+				case vehRating >= 4.0 && vehRating <= 8.0:
+					vehResult.feedbackNeutral++
+				case vehRating < 4.0:
+					vehResult.feedbackNegative++
 				}
 			}
-
-			switch {
-			case vehRating > 8.0:
-				vehResult.feedbackPositive++
-			case vehRating >= 4.0 && vehRating <= 8.0:
-				vehResult.feedbackNeutral++
-			case vehRating < 4.0:
-				vehResult.feedbackNegative++
-			}
 		}
-
 		vehResult = vehicleResult[v.Name]
 	}
 }
