@@ -1,10 +1,12 @@
 package main
 
-import ("encoding/json"
-        "io/ioutil"
-        "log"
-		"strings"
-        "os")
+import (
+	"encoding/json"
+	"io/ioutil"
+	"log"
+	"os"
+	"strings"
+)
 
 type vehicle interface {
 }
@@ -109,25 +111,26 @@ func generateRating() {
 		var vehResult feedbackResult
 		var vehRating rating
 
-		for _, msg := range v.Feedback{
-			if len(text)>=5 {
-				var text = strings.Split(msg, " ")
+		for _, msg := range v.Feedback {
+			var text []string
+			if len(text) >= 5 {
+				text = strings.Split(msg, " ")
 			}
 
 			vehRating = 5.0
-			vehResult.feedbackTotal ++
+			vehResult.feedbackTotal++
 
-			for _, word :=r range text {
+			for _, word := range text {
 				s := strings.Trim(strings.ToLower(word), " ,.,!,?,\t,\n,\r")
 
 				switch s {
 				case "pleasure", "impressed", "wonderful", "fantastic", "splendid":
 					vehRating += extraPositive
-			    case "help", "helpful", "thanks", "thank you", "happy":
+				case "help", "helpful", "thanks", "thank you", "happy":
 					vehRating += positive
-			    case "not helpful", "sad", "angry", "improve", "annoy":
+				case "not helpful", "sad", "angry", "improve", "annoy":
 					vehRating += negative
-			    case "pathetic", "bad", "worse", "unfortunately", "agitated", "frustrated":
+				case "pathetic", "bad", "worse", "unfortunately", "agitated", "frustrated":
 					vehRating += extraNegative
 				}
 			}
