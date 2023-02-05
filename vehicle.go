@@ -86,7 +86,7 @@ func main() {
 	// Print ratings for the different vehicles
 }
 
-func readJSONFile() Vanumber
+func readJSONFile() Values {
 	jsonFile, err := os.Open("feedback.json")
 
 	if err != nil {
